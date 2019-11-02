@@ -36,6 +36,7 @@ _ConnectionParameters = collections.namedtuple(
         'ssl',
         'ssl_is_advisory',
         'connect_timeout',
+        'session',
         'server_settings',
     ])
 
@@ -205,7 +206,7 @@ def _parse_hostlist(hostlist, port, *, unquote=False):
 
 def _parse_connect_dsn_and_args(*, dsn, host, port, user,
                                 password, passfile, database, ssl,
-                                connect_timeout, server_settings):
+                                connect_timeout, session, server_settings):
     # `auth_hosts` is the version of host information for the purposes
     # of reading the pgpass file.
     auth_hosts = None
@@ -454,7 +455,7 @@ def _parse_connect_dsn_and_args(*, dsn, host, port, user,
     params = _ConnectionParameters(
         user=user, password=password, database=database, ssl=ssl,
         ssl_is_advisory=ssl_is_advisory, connect_timeout=connect_timeout,
-        server_settings=server_settings)
+        session=session, server_settings=server_settings)
 
     return addrs, params
 
@@ -464,7 +465,7 @@ def _parse_connect_arguments(*, dsn, host, port, user, password, passfile,
                              statement_cache_size,
                              max_cached_statement_lifetime,
                              max_cacheable_statement_size,
-                             ssl, server_settings):
+                             session, ssl, server_settings):
 
     local_vars = locals()
     for var_name in {'max_cacheable_statement_size',
@@ -493,7 +494,7 @@ def _parse_connect_arguments(*, dsn, host, port, user, password, passfile,
         dsn=dsn, host=host, port=port, user=user,
         password=password, passfile=passfile, ssl=ssl,
         database=database, connect_timeout=timeout,
-        server_settings=server_settings)
+        session=session, server_settings=server_settings)
 
     config = _ClientConfiguration(
         command_timeout=command_timeout,
